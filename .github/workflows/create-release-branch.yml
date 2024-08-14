@@ -1,0 +1,26 @@
+name: Create Release Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "스프린트 시작일 (MMDD 형식)"
+        required: true
+        type: string
+
+jobs:
+  create-release-branch:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: main
+    - name: Create release PR
+      uses: peter-evans/create-pull-request@v6
+      with:
+        base: ${{ github.head_ref }} # PR의 대상 브랜치
+        token: ${{ secrets.GH_TOKEN }}
+        commit-message: release/${{ inputs.date }}-sprint
+        title: release/${{ inputs.date }}-sprint
+        body: test
+        branch: release/${{ inputs.date }}-sprint # PR을 생성할 브랜치 이름
